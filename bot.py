@@ -10,6 +10,7 @@ slack_events_adapter = SlackEventAdapter(signing_secret, "/slack/events")
 bot_user_access_token = os.environ["BOT_USER_ACCESS_TOKEN"]
 slack_client = WebClient(bot_user_access_token)
 
+# Send a message to show that bot is online
 slack_client.chat_postMessage( channel="#general", text="Hello, I'm online now! :tada:")
 
 # Example responder to greetings
