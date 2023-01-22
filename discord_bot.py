@@ -162,10 +162,6 @@ async def on_message(message: discord.Message):
         c.execute("""INSERT INTO messages(channel_id, sender_id, name, ts) 
                VALUES (?,?,?,?);""", (message.id, message.author.id, message.content, str(sentiment_response)))
         c.execute("COMMIT")
-        print(f"Your ID is: {message.author.id}")
-        print(f'This was your message: {message.content}')
-        print(f'This is the sentiment_response{sentiment_response}')
-        await message.channel.send(f"Your ID is: {message.author.id}")
 
     if message.author == client.user:
         return
@@ -179,7 +175,18 @@ async def on_message(message: discord.Message):
 async def dbget(interaction: discord.Interaction):
     c.execute("SELECT * FROM messages")
     rows = c.fetchall()
+    string = ""
     for i in rows:
-        print(i)
+        string_new = convertTuple(i)
+        string = string + string_new + "\n"
+
+    await interaction.response.send_message(string)
+
+
+def convertTuple(tup):
+    str = ''
+    for item in tup:
+        str = str + item + " | "
+    return str
 
 client.run(token_py)
