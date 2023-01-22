@@ -10,6 +10,7 @@ from sentiment_analyzer import sample_analyze_sentiment
 # This `app` represents your existing Flask app
 app = Flask(__name__)
 
+
 def create_db_tables(conn):
     if conn is not None:
         c = conn.cursor()
