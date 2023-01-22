@@ -99,7 +99,6 @@ def profile(member_id=0):
             event['attendance'] = 'Absent'
         events.push(event)
 
-
     return render_template('profile.html', member=member, critical_records = critical_records, events=events)
 
 # Start the server on port 3000

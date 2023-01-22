@@ -169,9 +169,9 @@
 
 <script>
     new Chartist.Line('#happiness-chart', {
-      labels: ['Jan 16','Jan 17', 'Jan 18', 'Jan 19', 'Jan 20', 'Jan 21', 'Jan 22'],
+      labels: {{ happiness_levels_dates }},
       series: [
-        [0.3, 0.5, 0.1, -0.4, -0.2, 0.1, -0.1]
+        {{ happiness_levels }}
       ]
     }, {
       high: 1,
