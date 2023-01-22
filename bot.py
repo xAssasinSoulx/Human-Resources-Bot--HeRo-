@@ -38,8 +38,10 @@ def handle_message(event_data):
     print("LOG: following message sent -> " + message['text'])
 
     # Insert message into messages table
+    # if message['user'] is not slack_client.bots_info['bot']['id']:
+    print(slack_client.bots_info(token=os.environ["BOT_USER_ACCESS_TOKEN"]))
     c.execute("""INSERT INTO messages(channel_id, sender_id, name, ts) 
-               VALUES (?,?,?,?);""", (message['channel'], message['user'], message['text'], message['ts']))
+            VALUES (?,?,?,?);""", (message['channel'], message['user'], message['text'], message['ts']))
     c.execute("COMMIT")
 
     # If the incoming message contains "hi", then respond with a "Hello" message
@@ -47,6 +49,19 @@ def handle_message(event_data):
         channel = message["channel"]
         message = "Hello <@%s>! :tada:" % message["user"]
         slack_client.chat_postMessage(channel=channel, text=message)
+
+    # If the incoming message contains "hi", then respond with a "Hello" message
+    if message.get("subtype") is None and "employees" in message.get('text'):
+
+        c.execute("""SELECT * from messages""")
+        records = c.fetchall()
+
+        
+        channel = message["channel"]
+
+        for col in records[-5:]:
+            message = col[0] + " | <@" + col[1] + "> | " + col[2] + " | " + col[3] 
+            slack_client.chat_postMessage(channel=channel, text=message)
 
 # Error events
 @slack_events_adapter.on("error")
