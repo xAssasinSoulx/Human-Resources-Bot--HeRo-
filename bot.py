@@ -1,6 +1,10 @@
 from slackeventsapi import SlackEventAdapter
 from slack_sdk.web import WebClient
 import os, sqlite3
+from flask import Flask
+
+# This `app` represents your existing Flask app
+app = Flask(__name__)
 
 def create_db_tables(conn):
     if conn is not None:
@@ -22,7 +26,7 @@ c = create_db_tables(conn)
  
 # Initialize Slack WebClient and Event Adapter
 slack_client = WebClient(os.environ["BOT_USER_ACCESS_TOKEN"])
-slack_events_adapter = SlackEventAdapter(os.environ["SIGNING_SECRET"], "/slack/events")
+slack_events_adapter = SlackEventAdapter(os.environ["SIGNING_SECRET"], "/slack/events", app)
 
 # Send a message to indicate that bot is online
 slack_client.chat_postMessage(channel="#general", text="Hello, I'm online now! :tada:")
@@ -69,5 +73,13 @@ def error_handler(err):
     print("ERROR: " + str(err))
 
 
-# Start the slack event adapter on port 3000
-slack_events_adapter.start(port=3000)
+
+
+# An example of one of your Flask app's routes
+@app.route("/")
+def hello():
+  return "Hello there!"
+
+# Start the server on port 3000
+if __name__ == "__main__":
+  app.run(port=3000)
