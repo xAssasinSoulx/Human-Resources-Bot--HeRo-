@@ -1,6 +1,6 @@
 # Human Resources Bot (HeRo)
 
-GSoft Sponsor Challenge Winner of CONUHACKS VII
+**GSoft Sponsor Challenge Winner of CONUHACKS VII**
 
 ## Revolutionizing Onboarding and Employee Sentiment Tracking
 
