@@ -8,3 +8,6 @@ discord.channel
 datetime
 requests
 sqlite3
+oogle.cloud
+language_v1
+six
