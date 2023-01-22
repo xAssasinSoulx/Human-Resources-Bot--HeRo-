@@ -4,7 +4,7 @@ GSoft Sponsor Challenge Winner of CONUHACKS VII
 
 ## Revolutionizing Onboarding and Employee Sentiment Tracking
 
-Our HR bot aims to **revolutionize** the onboarding process and employee sentiment tracking within organizations. Through the integration of powerful tools such as __Google Cloud Natural Language API, Calendar API, and Github REST API__, we are able to **streamline** the onboarding process and provide valuable insights into employee sentiment.
+Our HR bot aims to **revolutionize** the onboarding process and employee sentiment tracking within organizations. Through the integration of powerful tools such as _Google Cloud Natural Language API, Calendar API, and Github REST API_, we are able to **streamline** the onboarding process and provide valuable insights into employee sentiment.
 
 We understand that onboarding can be a challenging task for any organization, with a multitude of tasks and information that needs to be gathered and processed. Our bot streamlines this process by **automating repetitive tasks** and providing all the necessary information in one place. Additionally, the integration of sentiment analysis allows managers to stay informed about their employee's satisfaction, engagement, and overall well-being.
 
