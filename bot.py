@@ -73,8 +73,6 @@ def error_handler(err):
     print("ERROR: " + str(err))
 
 
-
-
 # An example of one of your Flask app's routes
 @app.route("/")
 def hello():
