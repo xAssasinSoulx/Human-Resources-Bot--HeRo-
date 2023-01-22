@@ -6,14 +6,12 @@ import datetime
 import requests
 import sqlite3
 
-
 from urllib.parse import parse_qs, urlparse
 from discord.ext import commands, tasks
 from discord.ext.commands import bot
 from colorama import Back, Fore, Style
 from sentiment_analyzer import sample_analyze_sentiment
 from utils import token_py
-
 
 
 intents = discord.Intents().all()
@@ -54,13 +52,13 @@ async def on_ready():
 
 @client.event
 async def on_member_join(member:discord.Member):
-    channel = discord.utils.get(member.guild.text_channels, name="welcome")
+    channel = discord.utils.get(member.guild.text_channels, name="general")
     await channel.send(f"<@{member.id}> has joined us. Welcome!")
 
     
 @client.event
 async def on_member_remove(member:discord.Member):
-    channel = discord.utils.get(member.guild.text_channels, name="goodbye")
+    channel = discord.utils.get(member.guild.text_channels, name="general")
     await channel.send(f"<@{member.id}> has left us :(")
 
 
@@ -140,10 +138,12 @@ async def message(interaction: discord.Interaction ,user: discord.Member, messag
 
 @client.tree.command(name="helpme", description="Help me with the bot")
 async def helpme(interaction: discord.Interaction):
-    await interaction.response.send_message("Please check your DM for help", ephemeral=True, delete_after=5)
-    await interaction.user.send("Reply to this message to seek further help from our admins")
+    help_channel = client.get_guild(1066755606863691927).get_channel(1066770372663443516)
 
-    
+    await help_channel.send(f"{interaction.user} is seeking help using bot's command 'Help Me'")
+    await interaction.response.send_message("Please check your DM for help", ephemeral=True, delete_after=5)
+    await interaction.user.send("Reply to this message to seek further help from your managers")
+
 
 @client.tree.command(name="commits", description="Gets the number of commit")
 async def commits(interaction: discord.Interaction, owner_name1: str, repo_name1: str):
@@ -164,13 +164,18 @@ def get_commits_count(owner_name: str, repo_name: str) -> int:
 
 @client.event
 async def on_message(message: discord.Message):
-    channelIDsToListen = [ 803386846905761836 ]
+    channelIDsToListen = [ 1066755608717570101 ]
     if message.channel.id in channelIDsToListen and message.author.bot is False:
         message_tostring = f'{message.content}'
         sentiment_response = sample_analyze_sentiment(message_tostring)
+        sentiment_response_critic = float(format(sentiment_response, ".2f"))
+        manager_id = await client.fetch_user(624702543645114379)
         message_author = "<@"+str(message.author.id)+">"
         time_message = str(time.strftime("%H:%M:%S UTC", time.localtime()))
         channel_message = "<#"+str(message.channel.id)+">"
+
+        if(sentiment_response_critic <= -0.7):
+            await manager_id.send(f"Attention Manager, your employee: <@"+ str(message.author.id)+"> has said the following that may need your attention: '"+ message.content + "' in the channel: "+ channel_message + " at " + time_message)
 
         c.execute("""INSERT INTO messages(channel_id, sender_id, name, sentiment, ts) 
                VALUES (?,?,?,?,?);""", (channel_message, message_author, message.content, str(sentiment_response), time_message))
@@ -180,7 +185,7 @@ async def on_message(message: discord.Message):
         return
     
     if message.guild is None and not message.author.bot:
-        channel2 = client.get_guild(803386846905761833).get_channel(1063721359198392342)
+        channel2 = client.get_guild(1066755606863691927).get_channel(1066756920666488992)
         await channel2.send(f"{message.author} replied: '{message.content}' at " + time.strftime("%H:%M:%S UTC", time.localtime()))
 
 
@@ -193,7 +198,7 @@ async def dbget(interaction: discord.Interaction):
         string_new = convertTuple(i)
         string = string + string_new + "\n"
 
-    await interaction.response.send_message(string, ephemeral=True)
+    await interaction.response.send_message(string)
 
 
 def convertTuple(tup):
