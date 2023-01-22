@@ -25,7 +25,8 @@ def create_db_tables(conn):
         c.execute("""CREATE TABLE IF NOT EXISTS messages ( 
                                     channel_id text NOT NULL, 
                                     sender_id text NOT NULL, 
-                                    name text NOT NULL, 
+                                    name text NOT NULL,
+                                    sentiment text NOT NULL,
                                     ts text NOT NULL
                                 );""")
     else:
@@ -57,7 +58,6 @@ async def on_member_join(member:discord.Member):
     await channel.send(f"<@{member.id}> has joined us. Welcome!")
 
     
-
 @client.event
 async def on_member_remove(member:discord.Member):
     channel = discord.utils.get(member.guild.text_channels, name="goodbye")
@@ -66,13 +66,21 @@ async def on_member_remove(member:discord.Member):
 
 @client.tree.command(name="help", description="List of all commands and descriptions")
 async def help(interaction: discord.Interaction):
-    embed = discord.Embed(title="Commands", description="Here are all the commands which are being used with the forward slash '/'", color=discord.Color.green())
+    embed = discord.Embed(title="Commands", description="""Here are all the commands which are being used with the 
+                                                            forward slash '/'""", color=discord.Color.green())
+
     embed.add_field(name = "help", value="Lists all the commands", inline=False)
-    embed.add_field(name = "shutdown", value="Shuts down the bot", inline=False)
     embed.add_field(name = "clear", value="Purges the ammount of messages given as an argument", inline=False)
-    embed.add_field(name = "userinfo", value="Retrieves the information of the given user", inline=False)
+    embed.add_field(name = "userinfo", value="""Retrieves the information of the given user (github information 
+                                                can be passed to be seen too""", inline=False)
+
     embed.add_field(name = "message", value="Sends a Discord Message to the given user", inline=False)
-    embed.add_field(name = "dm", value="Creates a DM with the bot which the user can ask for help", inline=False)
+    embed.add_field(name = "dm", value="Creates a DM with the bot which the user can ask for help", inline=False)   
+    embed.add_field(name = "sentiment", value="Retrieves the sentiment analysis of a certain given message", inline=False)
+    embed.add_field(name = "commits", value="Retrieves the given user's commit count on a given repository", inline=False)
+    embed.add_field(name = "dbget", value="""Retrieves the database of entered messages in a chat with the respective 
+                                            Channel ID, User ID, message content and the messages sentimental analysis""", inline=False)
+
     await interaction.response.send_message(embed=embed)
 
 
@@ -142,6 +150,7 @@ async def commits(interaction: discord.Interaction, owner_name1: str, repo_name1
     commit_count = get_commits_count(owner_name1, repo_name1)
     await interaction.response.send_message("The total number of commits is: {}".format(commit_count))
 
+
 def get_commits_count(owner_name: str, repo_name: str) -> int:
     url = f"https://api.github.com/repos/{owner_name}/{repo_name}/commits?per_page=1"
     r = requests.get(url)
@@ -159,8 +168,12 @@ async def on_message(message: discord.Message):
     if message.channel.id in channelIDsToListen and message.author.bot is False:
         message_tostring = f'{message.content}'
         sentiment_response = sample_analyze_sentiment(message_tostring)
-        c.execute("""INSERT INTO messages(channel_id, sender_id, name, ts) 
-               VALUES (?,?,?,?);""", (message.id, message.author.id, message.content, str(sentiment_response)))
+        message_author = "<@"+str(message.author.id)+">"
+        time_message = str(time.strftime("%H:%M:%S UTC", time.localtime()))
+        channel_message = "<#"+str(message.channel.id)+">"
+
+        c.execute("""INSERT INTO messages(channel_id, sender_id, name, sentiment, ts) 
+               VALUES (?,?,?,?,?);""", (channel_message, message_author, message.content, str(sentiment_response), time_message))
         c.execute("COMMIT")
 
     if message.author == client.user:
@@ -180,7 +193,7 @@ async def dbget(interaction: discord.Interaction):
         string_new = convertTuple(i)
         string = string + string_new + "\n"
 
-    await interaction.response.send_message(string)
+    await interaction.response.send_message(string, ephemeral=True)
 
 
 def convertTuple(tup):
