@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Bootstrap Example</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/chartist.js/latest/chartist.min.css">
+
+  <link type="text/css" rel="stylesheet" href="/mainpage.css"/>
+
+</head>
+<body>
+    <script src="https://cdn.jsdelivr.net/chartist.js/latest/chartist.min.js"></script>
+
+    <nav class="navbar navbar-expand-lg bg-black text-white">
+        <div class="container-fluid">
+          <a class="navbar-brand text-white" href="#">Navbar</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse text-white" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0 text-white">
+              <li class="nav-item">
+                <a class="nav-link active text-white" aria-current="page" href="#">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link text-white" href="#">Link</a>
+              </li>
+            
+            </ul>
+
+            <li class="nav-item dropdown d-flex">
+                <img src="static/2.jpg" alt="Bootstrap" width="30" height="24">
+
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Mr/Mrs
+                </a>
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" href="#">Profile</a></li>
+                  <li><a class="dropdown-item" href="#">Settings</a></li>
+                  <li><hr class="dropdown-divider"></li>
+                  <li><a class="dropdown-item" href="#">Log Out</a></li>
+                </ul>
+              </li>
+          </div>
+        </div>
+    </nav>
+
+    <div class="container  mt-5 mb-5">
+    
+      <div class="row">
+        <!-- Profile Card Col-->
+        <div class="col-md-4 col-sm-12">
+          <div class="card shadow">
+            <div class="card-body">
+              <img src="https://via.placeholder.com/150" border-radius=50 class="card-img-top p-4 rounded-circle">
+              <h5 class="card-title text-center mt-3 fw-bold">{{member.name}}</h5>
+              <p class="card-text text-center text-muted">Software Developer</p>
+              <div class="card" style="background-color: rgb(243,248,252);">
+                <div class="container-fluid px-4 py-3">
+                  <div class="row">
+                    <div class="col-sm-6 col-xs-12 p-0">
+                      <p class="small text-muted mb-0 fw-bold">Department</p>
+                      <p class="small fw-bold">Design Team</p>
+                    </div>
+                    <div class="col-sm-6 col-xs-12 p-0 text-end">
+                      <p class="small text-muted mb-0 fw-bold">Date Hired</p>
+                      <p class="small fw-bold">17/3/2013</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>  
+        <!-- Member Stats Col-->
+        <div class="col-md-8 col-sm-12">
+          <div class="row">
+            <!-- Weekly Happiness Average -->
+            <div class="col-12">
+              <div class="card">
+                <h5 class="card-header">Weekly Happiness Average</h5>
+                <div class="card-body">
+                  <div class="progress">
+                    <div class="progress-bar bg-success" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Happiness Levels  -->
+            <div class="col-6 mt-2">
+              <div class="card">
+                <h5 class="card-header">Happiness Levels</h5>
+                <div class="card-body pt-2 px-0 pb-0">
+                  <div id="happiness-chart"></div>
+                </div>
+              </div>              
+            </div>
+            <!-- Critic Messages -->
+            <div class="col-6 mt-2">
+              <div class="table-responsive">
+                <div class="card" style="height:200px;">
+                  <h5 class="card-header">Critical Messages</h5>
+                  <div class="card-body overflow-auto">
+                    {% for record in critical_records %}
+                    <div class="card mb-4">
+                      <div class="card-body">
+                        <p>{{ record[2] }}</p>
+                        <div class="d-flex justify-content-end">
+                          <div class="d-flex flex-row align-items-center">
+                            <p class="small mb-0">{{ record[3] | ctime }}</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>                  
+                    {% endfor %}
+                  </div>
+                </div>
+              </div>             
+            </div>
+            <!-- Git Performance -->
+            <div class="col-6 mt-2">
+              <div class="card">
+                <h5 class="card-header">Work Performance</h5>
+                <div class="card-body">
+                  <div id="work-chart"></div>
+                </div>
+              </div>              
+            </div>
+            <!-- Event Attendee -->
+            <div class="col-6 mt-2">
+              <div class="table-responsive">
+                <div class="card">
+                  <h5 class="card-header">Event Attendance</h5>
+                  <div class="card-body">
+                    <table class="table table-bordered">
+                      <thead>
+                        <tr>
+                          <th> Date </th>
+                          <th> Event </th>
+                          <th> Attendance </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for event in events%}
+                        <tr>
+                          <td> {{ event['date' ] }} </td>
+                          <td> {{ event['title'] }} </td>
+                          <td> {{ event['attendance'] }} </td>
+                        </tr>
+                        (% endfor %)
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>             
+            </div>
+            <!-- Discord Critic Messages -->
+            <div class="col-12"></div>
+          </div>
+
+
+        </div>
+        
+      </div>
+
+<script>
+    new Chartist.Line('#happiness-chart', {
+      labels: ['Jan 16','Jan 17', 'Jan 18', 'Jan 19', 'Jan 20', 'Jan 21', 'Jan 22'],
+      series: [
+        [0.3, 0.5, 0.1, -0.4, -0.2, 0.1, -0.1]
+      ]
+    }, {
+      high: 1,
+      low: -1,
+      showArea: true,
+      showLine: false,
+      showPoint: false,
+      axisX: {
+        showLabel: true,
+        showGrid: false
+      }
+    });
+
+    new Chartist.Line('#work-chart', {
+        labels: ['Jan 17', 'Jan 18', 'Jan 19', 'Jan 20', 'Jan 21', 'Jan 22'],
+        series: [
+          [0, 10, 20, 50, 40, 15]
+        ]
+      }, {
+      low: 0,
+      showArea: true
+    });
+</script>
+
+  
+</body>
+</html>
