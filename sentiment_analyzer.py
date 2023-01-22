@@ -14,5 +14,5 @@ def sample_analyze_sentiment(content):
 
     response = client.analyze_sentiment(request={"document": document})
     sentiment = float(response.document_sentiment.score)
-    return(f"{sentiment:.2f}")
+    return(sentiment)
 
