@@ -1,3 +1,10 @@
 slack_sdk
 slackeventsapi
 flask
+discord
+time
+platform
+discord.channel
+datetime
+requests
+sqlite3
